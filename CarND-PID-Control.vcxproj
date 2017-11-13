@@ -115,10 +115,12 @@
   <ItemGroup>
     <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\PID.h" />
+    <ClInclude Include="src\Twiddle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PID.cpp" />
+    <ClCompile Include="src\Twiddle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
