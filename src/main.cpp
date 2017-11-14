@@ -37,8 +37,12 @@ int main() {
 	PID pid;
 	double Kp = 0.255734;
 	double Ki = 0;
-	//double Kd = 6.84598;
 	double Kd = 0.11638166;
+
+	Kp = 0.381867;
+	Ki = 0.00001;
+	Kd = 0.133599;
+
 	pid.Init(Kp, Ki, Kd);
 
 	size_t c_frame = 0;

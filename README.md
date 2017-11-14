@@ -3,6 +3,28 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+The goal of this project is to steer a simulated car through a track using a PID controller.
+
+---
+
+## PID Controller
+
+A PID (proportional, integral, derivative) controller is a control loop feedback mechanism. The PID controller calculates an error value **e(t)**, the difference between the the desired and the measured value, and applies a correction that is a combination of the proportional (P), integral (I) and derivative (D) terms.
+
+![PID Controller (image from wikipedia.org)](misc/PID_en.svg.png)
+
+---
+
+## Proportional Term
+
+The proportional term (P) is the difference between the desired and measured values, mutiplied by the proportianal coefficient **Kd**. The proportinal term overshoots the desired value and oscillates around it.
+
+---
+
+## Integral Term
+
+---
+
 ## Dependencies
 
 * cmake >= 3.5
@@ -19,7 +41,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -33,7 +55,7 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
