@@ -35,12 +35,12 @@ public:
 	/*
 	* Update the PID error variables given cross track error.
 	*/
-	void UpdateError(double cte);
+	void UpdateError(const double& cte, const double& dt);
 
 	/*
 	* Calculate the total PID error.
 	*/
-	double TotalError();
+	double TotalError(const double& dt);
 };
 
 #endif /* PID_H */

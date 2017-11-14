@@ -35,6 +35,8 @@ public:
 	void step(double err);
 
 	void setParams(const double& Kp, const double& Ki, const double& Kd);
+	void setDParams(const double& dp, const double& di, const double& dd);
+
 };
 
 #endif

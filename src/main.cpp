@@ -4,9 +4,11 @@
 #include "PID.h"
 #include <math.h>
 #include "Twiddle.h"
+#include <chrono>
 
 // for convenience
 using json = nlohmann::json;
+using namespace std::chrono;
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -28,29 +30,38 @@ std::string hasData(std::string s) {
 	return "";
 }
 
-#ifdef USE_LATEST_UWS
-#else
-#endif
 
 int main() {
 	uWS::Hub h;
 
 	PID pid;
-	double Kp = 0.241613;
-	double Ki = 0.01;
-	double Kd = 7.04;
+	double Kp = 0.255734;
+	double Ki = 0;
+	//double Kd = 6.84598;
+	double Kd = 0.11638166;
 	pid.Init(Kp, Ki, Kd);
 
-#define TWIDDLE_FRAMES 500
+	size_t c_frame = 0;
+
 	Twiddle twiddle;
 	double t_err = 0;
 	size_t t_step = 0;
 	twiddle.setParams(Kp, Ki, Kd);
+//	// first pass
+//	twiddle.setDParams(0.1, 0.01, 0.4);
+//#define TWIDDLE_FRAMES 500
+	// second pass
+	twiddle.setDParams(0.07, 0.001, 0.01);
+#define TWIDDLE_FRAMES 4500
+
+#define DO_TWIDDLE
+
+	double last_timestamp = (double)duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() / 1000.0;
 
 #ifdef USE_LATEST_UWS
-	h.onMessage([&pid, &twiddle, &t_err, &t_step](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
+	h.onMessage([&pid, &twiddle, &t_err, &t_step, &c_frame, &last_timestamp](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
 #else
-	h.onMessage([&pid, &twiddle, &t_err, &t_step](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+	h.onMessage([&pid, &twiddle, &t_err, &t_step, &c_frame, &last_timestamp](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
 #endif
 		// "42" at the start of the message means there's a websocket message event.
 		// The 4 signifies a websocket message
@@ -68,16 +79,24 @@ int main() {
 					double throttle = 0.3;
 					double steer_value;
 
+					double current_timestamp = (double)duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() / 1000.0;
+					double dt = current_timestamp - last_timestamp;   // delta t in seconds
+					last_timestamp = current_timestamp;
+
+#ifdef DO_TWIDDLE
 					pid.Kp = twiddle.p[0];
 					pid.Ki = twiddle.p[1];
 					pid.Kd = twiddle.p[2];
+#endif
 
-					pid.UpdateError(cte);
-					steer_value = pid.TotalError();
+					pid.UpdateError(cte, dt);
+					steer_value = pid.TotalError(dt);
 
-					if (speed < throttle * 30) {
-						steer_value = 0;					// wait for car to start moving
+					if (speed < throttle * 20) {		// wait for car to start moving 20% at throttle speed
+						steer_value = 0;
+						pid.i_error = 0;
 					} else {
+#ifdef DO_TWIDDLE
 						t_err += pow(cte, 2);
 						t_step += 1;
 						if (t_step % TWIDDLE_FRAMES == 0) {
@@ -85,6 +104,8 @@ int main() {
 							t_err = 0;
 							pid.i_error = 0;
 						}
+						//std::cout << "frame:" << c_frame++ << std::endl;
+#endif
 					}
 
 					// DEBUG

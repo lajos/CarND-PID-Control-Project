@@ -18,13 +18,13 @@ void PID::Init(double Kp_, double Ki_, double Kd_) {
 	d_error = 0;
 }
 
-void PID::UpdateError(double cte) {
+void PID::UpdateError(const double& cte, const double& dt) {
 	d_error = cte - p_error;
 	p_error = cte;
-	i_error += cte;
+	i_error += cte * dt;
 }
 
-double PID::TotalError() {
-	return -Kp * p_error - Kd * d_error - Ki * i_error;
+double PID::TotalError(const double& dt) {
+	return -Kp * p_error - Kd * d_error / dt - Ki * i_error;
 }
 
