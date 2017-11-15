@@ -35,13 +35,23 @@ int main() {
 	uWS::Hub h;
 
 	PID pid;
-	double Kp = 0.255734;
-	double Ki = 0;
-	double Kd = 0.11638166;
+	double Kp, Ki, Kd;
 
-	Kp = 0.381867;
-	Ki = 0.00001;
-	Kd = 0.133599;
+	Kp = 0.114255;
+	Ki = 0;
+	Kd = 0.092131;
+
+	//Kp = 0.255734;
+	//Ki = 0;
+	//Kd = 0.11638166;
+
+	//Kp = 0.381867;
+	//Ki = 0.00001;
+	//Kd = 0.133599;
+
+	//Kp = 0.45748;
+	//Ki = -0.0008;
+	//Kd = 0.133599;
 
 	pid.Init(Kp, Ki, Kd);
 
@@ -51,10 +61,6 @@ int main() {
 	double t_err = 0;
 	size_t t_step = 0;
 	twiddle.setParams(Kp, Ki, Kd);
-//	// first pass
-//	twiddle.setDParams(0.1, 0.01, 0.4);
-//#define TWIDDLE_FRAMES 500
-	// second pass
 	twiddle.setDParams(0.07, 0.001, 0.01);
 #define TWIDDLE_FRAMES 4500
 
